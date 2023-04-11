@@ -154,10 +154,10 @@
       var audiobase64 = data.response;
 
       //send to datapipe
-      jsPsychPipe.saveBase64Data(expID, `${subject_id}.csv`, data)
+      jsPsychPipe.saveBase64Data(expID, `${subject_id}.csv`, data.response)
 
       // clear the data from participants' computer to save space
-      //data.response = null;
+      data.response = null;
     }
   };
 
