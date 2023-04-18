@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://unpkg.com/jspsych@7.3.1"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-fullscreen"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-button-response"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-survey-text"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-preload"></script>
+  <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+  <script src="stimuli.js"></script>
+  <script src="testStimuli.js"></script>
+  <link href="https://unpkg.com/jspsych@7.3.1/css/jspsych.css" rel="stylesheet">
+
+</head>
+
+<body></body>
+<script>
+
+  var condition = 0;
+
+  getCondition();
+
+  async function getCondition() {
+    condition = await jsPsychPipe.getCondition("Oy4rPf7W5AiF");
+    if (condition == 0) { timeline = englishVersion(); }
+    if (condition == 1) { timeline = chineseVersion(); }
+    jsPsych.run(timeline);
+  }
+
+
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  //VERSION A, answer in English -------------------------------------------------------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  function englishVersion() {
+
+    var jsPsych = initJsPsych();
+
+    var shuffledStimuli = jsPsych.randomization.shuffle(test_stimuli);
+    var pic_to_eng_condition = shuffledStimuli.splice(0, 30);
+    var trans_to_eng_condition = shuffledStimuli.splice(0, 30);
+
+    var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+    const filename = `${subject_id}.csv`;
+    var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+    var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+    var condition_name = 'englishVersion'
+
+    jsPsych.data.addProperties({
+      condition: condition_name,
+      subject_id: subject_id,
+      study_id: study_id,
+      session_id: session_id
+    });
+
+    var fullscreen_trial = {
+      type: jsPsychFullscreen,
+      fullscreen_mode: true
+    }
+
+    var preload = {
+      type: jsPsychPreload,
+      auto_preload: true
+    }
+
+    var welcome_trial = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `<p style="text-align center;">Thank you for agreeing to participate in this research experiment, conducted by a researcher at Vassar College! </p></p>This study takes about <b>20 minutes</b> and the pay will be <b>£3</b> or <b>$4</b> once approved.</p></p>Your only identity will be your Prolific ID.</p></p>To continue, you will need to be able to <b>read and type</b> in <b>English</b> and <b>Simplified Chinese (中文).</b></p> You will also need to be ready with Chinese installed on your keyboard.</p> You may press “ESC” on your keyboard to exit the full screen and close the study at any time. </p>`,
+          options: ['I agree to the terms of this study and wish to proceed.'],
+          required: true
+        }
+      ]
+    };
+
+    var warning = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `<p style="text-align center;">Again, you will <b>NEED</b> to know Simplified Chinese (中文).</p> You answers will be thoroughly reviewed. </p>If there are too many no or blank answers, or the time falls shorter than 10 minutes, the response WILL be rejected.</p> You may press “ESC” on your keyboard to exit the full screen and close the study at any time. </p>`,
+          options: ['I agree to the terms of this study and wish to proceed.'],
+          required: true
+        }
+      ]
+    };
+
+
+    var survey = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: "<b>Please answer the following questions before we start.</b></p> </p>What is your first language?",
+          name: 'firstLanguage',
+          options: ['Chinese (Mandarin)', 'Chinese (Cantonese)', 'Chinese (other dialects)', 'English', 'Other', 'Multiple languages as first language'],
+          data: {
+            task: 'first language'
+          },
+          required: true
+        },
+        {
+          prompt: "What language do you use most frequently?",
+          name: 'mainLanguage',
+          options: ['Chinese (Mandarin)', 'Chinese (Cantonese)', 'Chinese (other dialects)', 'English', 'Other', 'I use two or more languages equally frequently'],
+          data: {
+            task: 'main language'
+          },
+          required: true
+        }
+      ],
+    };
+
+
+    var instruction1 = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `Thank you! Let's get started! </p></p>We ask that you follow these instructions carefully. It is important that you <b>do not </p>communicate with others</b> or consult the internet for answers during the experiment.</p> Please <b>do not use the back button</b> on your browser as it will lose all progress. </p></p>It is <b>OK</b> to make mistakes. <b>Take your time</b> and try to answer to the best of your ability. </p></p> You will have an opportunity to provide feedback at the end. </p>Any questions? Contact the researcher through the Prolific messaging system.</p>`,
+          options: ['I have read the instructions.'],
+          required: true
+        }
+      ]
+    };
+
+    var part1 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `Part I, Name the Pictures in English </p>`,
+      choices: ['Continue']
+    };
+
+    var instruction2 = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `<b>Tip of the Tongue (ToT)</b> phenomenon happens when you are confident that you know the target word, </p>yet you cannot recall this word. You might experience this effect in this study. </p> </p><b>Instructions:</b> </p>You will see a series of images. If you know the name of what is shown in English, </p>select the “yes” choice and type the answer in English. </p></p>No need to stress over capitalization or the correct spelling, but try to be as accurate as you can. </p></p>Here is an example.</p>`,
+          options: ['I have read the instructions and am ready to see an example.'],
+          required: true
+        }
+      ]
+    };
+    var appleExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/apple.jpg"></img>',
+      prompt: "</p>Can you name this in English?<p style=color:grey> Press <b>'Yes'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in English']
+    }
+
+    var appleExample2 = {
+      type: jsPsychSurveyText,
+      preamble: '<img src="example/apple.jpg"></img>',
+      questions: [
+        { prompt: 'Type the name in English.</p><p style=color:grey>Please use the specific name.</p><p style=color:grey>For example, do not answer with the word “fruit”</p><p style=color:grey>Instead, answer with “apple”.<p>', columns: 30, required: true },
+      ]
+    }
+
+    var instruction3 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `If you know the name in English but cannot recall right now, </p>select the <b>'I'm having ToT in English'</b> button to proceed. Here is an example.</p>`,
+      choices: ['Continue']
+    };
+
+
+    var kiwiExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/kiwi.jpg"></img>',
+      prompt: "</p>Can you name this in English?</p><p style=color:grey>Press <b>'I'm having ToT in English'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in English']
+    }
+
+    var kiwiExample2 = {
+      type: jsPsychHtmlButtonResponse,
+      prompt: "</p>Is this the word you were thinking of? <p style=color:grey>Answer with either choice.<p>",
+      stimulus: `<p style="font-size:150px;">kiwi</p>`,
+      choices: ['Yes', 'No']
+    }
+
+    var instruction4 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `If you do not know the name in English, but do in Chinese, </p>select the <b>'No'</b> choice to proceed. Here is an example.</p>`,
+      choices: ['Continue']
+    };
+
+    var orangeExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/orange.jpg"></img>',
+      prompt: "</p>Can you name this in English?<p style=color:grey>Press <b>'No'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in English']
+    }
+
+    var orangeExample2 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/orange.jpg"></img>',
+      prompt: "<p style=color:grey>Then the question continues.<p></p>Now, can you name this in <b>Chinese</b>? </p><p style=color:grey>Press <b>'Yes'</b> for this trial.<p>",
+      choices: ['Yes', 'No', 'I`m having ToT in Chinese']
+    }
+
+    var orangeExample3 = {
+      type: jsPsychSurveyText,
+      preamble: '<img src="example/orange.jpg"></img>',
+      questions: [
+        { prompt: 'Type the name in <b>Chinese</b>.</p><p style=color:grey> Enter characters instead of just pinyin. Switch the language on your keyboard and type "橙子".', columns: 30, required: true },
+      ]
+    }
+
+    var instruction5 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `If you do not know the name in English, and are having a ToT in Chinese, </p>select the <b>'No'</b> choice to proceed. Here is an example.</p>`,
+      choices: ['Continue']
+    };
+
+    var stawberryExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/strawberry.jpg"></img>',
+      prompt: "</p>Can you name this in English?</p><p style=color:grey>Press <b>'No'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in English']
+    }
+
+    var stawberryExample2 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/strawberry.jpg"></img>',
+      prompt: "</p>Now, can you name this in <b>Chinese</b>? <p style=color:grey>Press <b>'I`m having ToT in Chinese'</b> for this trial.<p>",
+      choices: ['Yes', 'No', 'I`m having ToT in Chinese']
+    }
+
+    var stawberryExample3 = {
+      type: jsPsychHtmlButtonResponse,
+      prompt: "</p>Is this the word you were thinking of? </p><p style=color:grey>Answer with either choice.<p>",
+      stimulus: `<p style="font-size:150px;">草莓</p>`,
+      choices: ['Yes', 'No']
+    }
+
+    var instruction6 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `If you do not know the name at all, </p>select the <b>'No'</b> choice to proceed. Here is an example.</p>`,
+      choices: ['Continue']
+    };
+
+    var lemonExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/lemon.jpg"></img>',
+      prompt: "</p>Can you name this in English?</p><p style=color:grey>Press <b>'No'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in English']
+    }
+
+    var lemonExample2 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/lemon.jpg"></img>',
+      prompt: "</p>Now, can you name this in <b>Chinese</b>?</p><p style=color:grey>Press <b>'No'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in Chinese']
+    }
+
+    var ready = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `Are you ready to start? </p>`,
+      choices: ['Yes!', 'I would like to walkthrough the tutorial again.'],
+      data: {
+        task: 'ready'
+      }
+    }
+
+    var fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<span style="font-size:40px;">+</span>',
+      choices: "NO_KEYS",
+      trial_duration: 500
+    }
+
+    var instructions = {
+      timeline: [
+        instruction2,
+        appleExample,
+        appleExample2,
+        instruction3,
+        kiwiExample,
+        kiwiExample2,
+        instruction4,
+        orangeExample,
+        orangeExample2,
+        orangeExample3,
+        instruction5,
+        stawberryExample,
+        stawberryExample2,
+        stawberryExample3,
+        instruction6,
+        lemonExample,
+        lemonExample2,
+        ready,
+      ],
+      loop_function: function (instructions) {
+        if (jsPsych.data.get().last(1).values()[0].response == 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+
+    //PART 1, picture naming ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    var imageNaming = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: () => {
+        return `<img src="${jsPsych.timelineVariable('picture')}"></img>'</p>Can you name this in English?</p>'`
+      },
+      choices: ['Yes', 'No', 'I`m having TOT in English'],
+      data: {
+        task: 'pic-to-eng',
+        pictureStimulus: jsPsych.timelineVariable('picture')
+      }
+    }
+
+
+    var answer = {
+      timeline: [
+        {
+          type: jsPsychSurveyText,
+          preamble: () => {
+            return `<img src="${jsPsych.timelineVariable('picture')}"></img>`
+          },
+          questions: [
+            { prompt: 'Type the name in English.', columns: 30, required: true },
+          ],
+          data: {
+            task: 'pic-to-eng response in English',
+            correctEnglishResponse: jsPsych.timelineVariable('english')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'pic-to-eng' }).last(1).values()[0].response == 0
+      }
+    }
+
+    var no_choice = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: () => {
+            return `<img src="${jsPsych.timelineVariable('picture')}"></img>'</p>Now, can you name this in <b> Chinese</b>?</p>'`
+          },
+          choices: ['Yes', 'No', 'I`m having ToT in Chinese'],
+          data: {
+            task: 'no_choice'
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'pic-to-eng' }).last(1).values()[0].response == 1
+      }
+    }
+
+    var no_Chinese_TOT = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          prompt: "</p>Is this the word you were thinking of?",
+          stimulus: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('chinese')}</p>`
+          },
+          choices: ['Yes', 'No'],
+          data: {
+            task: 'pic-to-eng TOT in Chinese'
+          }
+        },
+      ],
+      conditional_function: () => {
+        var no_choice_validity =
+          jsPsych.data.get().last(1).values()[0]
+        if (no_choice_validity.task != 'no_choice') {
+          return false
+        }
+        return no_choice_validity.response == 2
+      }
+    }
+
+    var no_Chinese_response = {
+      timeline: [
+        {
+          type: jsPsychSurveyText,
+          preamble: () => {
+            return `<img src="${jsPsych.timelineVariable('picture')}"></img>`
+          },
+          questions: [
+            { prompt: 'Type the name in <b>Chinese</b>.', columns: 30, required: true },
+          ],
+          data: {
+            task: 'pic-to-eng response in Chinese',
+            chineseResponse: jsPsych.timelineVariable('chinese')
+          }
+        }
+      ],
+      conditional_function: () => {
+        var no_choice_validity =
+          jsPsych.data.get().last(1).values()[0]
+        if (no_choice_validity.task != 'no_choice') {
+          return false
+        }
+        return no_choice_validity.response == 0
+      }
+    }
+
+    var TOT = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          prompt: "</p>Is this the word you were thinking of?",
+          stimulus: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('english')}</p>`
+          },
+          choices: ['Yes', 'No'],
+          data: {
+            task: 'pic-to-eng TOT in English'
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'pic-to-eng' }).last(1).values()[0].response == 2
+      }
+    }
+
+    var image_naming_task = {
+      timeline: [
+        imageNaming,
+        answer,
+        no_choice,
+        no_Chinese_TOT,
+        no_Chinese_response,
+        TOT],
+      timeline_variables: pic_to_eng_condition,
+      randomize_order: true
+    }
+    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Part 2 Examples
+
+    var part_2 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `Part II, Translating Chinese words to English</p>`,
+      choices: ['Continue']
+    };
+
+    var example_instruction = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `You are doing great! The second part is more straightforward. </p>It is similar to the last part. But instead of pictures, you will see Chinese words. </p> You will be typing <b>exclusively</b> in English. Here are a couple of examples.`,
+          options: ['I have read the instructions.'],
+          required: true
+        }
+      ]
+    };
+
+    var exampleStimuli = jsPsych.randomization.shuffle(ex_stimuli);
+    var example_condition = exampleStimuli.splice(0, 5);
+
+    var translating = {
+      type: jsPsychHtmlButtonResponse,
+
+      stimulus: () => {
+        return `<p style="font-size:150px;">${jsPsych.timelineVariable('chinese')}</p>
+      <p>Do you know this word in English?</p>`
+      },
+      choices: ['Yes', 'No', 'I`m having TOT in English'],
+      data: {
+        task: 'chin-to-eng',
+        englishStimulus: jsPsych.timelineVariable('english')
+      }
+    }
+
+    var translatingAnswer = {
+      timeline: [
+        {
+          type: jsPsychSurveyText,
+          preamble: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('chinese')}</p>`
+          },
+          questions: [
+            { prompt: 'What is this word in English?', columns: 30, required: true },
+          ],
+          data: {
+            task: 'chin-to-eng, response',
+            englishResponse: jsPsych.timelineVariable('english')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'chin-to-eng' }).last(1).values()[0].response == 0
+      }
+    }
+
+    var fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<span style="font-size:40px;">+</span>',
+      choices: "NO_KEYS",
+      trial_duration: 200
+    }
+
+    var timeCheck = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: () => {
+            return `<p>You went really fast there! Take your time to think :)</p>`
+          },
+          choices: ['Continue']
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'chin-to-eng' }).last(1).values()[0].rt < 850
+      }
+    }
+
+
+    var translatingTOT = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          prompt: "</p>Is this the word you were thinking of?",
+          stimulus: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('english')}</p>`
+          },
+          choices: ['Yes', 'No'],
+          data: {
+            task: 'chin-to-eng, TOT',
+            englishTOTAnswer: jsPsych.timelineVariable('english')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'chin-to-eng' }).last(1).values()[0].response == 2
+      }
+    }
+
+    var part_2_start = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `Great! This is the last section! Answer away! </p>`,
+      choices: ['Continue']
+    };
+
+    var example = {
+      timeline: [translating, translatingAnswer, timeCheck, translatingTOT, fixation],
+      timeline_variables: example_condition,
+      randomize_order: true
+    }
+
+
+    //PART 2, translating --------------------------------------------------------------------------------------------------------------------------------------------
+    var translating = {
+      type: jsPsychHtmlButtonResponse,
+
+      stimulus: () => {
+        return `<p style="font-size:150px;">${jsPsych.timelineVariable('chinese')}</p>
+      <p>Do you know this word in English?</p>`
+      },
+      choices: ['Yes', 'No', 'I`m having TOT in English'],
+      data: {
+        task: 'chin-to-eng',
+        englishStimulus: jsPsych.timelineVariable('english')
+      }
+    }
+
+    var translatingAnswer = {
+      timeline: [
+        {
+          type: jsPsychSurveyText,
+          preamble: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('chinese')}</p>`
+          },
+          questions: [
+            { prompt: 'What is this word in English?', columns: 30, required: true },
+          ],
+          data: {
+            task: 'chin-to-eng, response',
+            englishResponse: jsPsych.timelineVariable('english')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'chin-to-eng' }).last(1).values()[0].response == 0
+      }
+    }
+
+    var fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<span style="font-size:40px;">+</span>',
+      choices: "NO_KEYS",
+      trial_duration: 200
+    }
+
+    var timeCheck = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: () => {
+            return `<p>You went really fast there! Take your time to think :)</p>`
+          },
+          choices: ['Continue']
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'chin-to-eng' }).last(1).values()[0].rt < 850
+      }
+    }
+
+
+    var translatingTOT = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          prompt: "</p>Is this the word you were thinking of?",
+          stimulus: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('english')}</p>`
+          },
+          choices: ['Yes', 'No'],
+          data: {
+            task: 'chin-to-eng, TOT',
+            englishTOTAnswer: jsPsych.timelineVariable('english')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'chin-to-eng' }).last(1).values()[0].response == 2
+      }
+    }
+
+    var translating_task = {
+      timeline: [translating, translatingAnswer, timeCheck, translatingTOT, fixation],
+      timeline_variables: trans_to_eng_condition,
+      randomize_order: true
+    }
+
+    const save_data = {
+      type: jsPsychPipe,
+      action: "save",
+      experiment_id: "Oy4rPf7W5AiF",
+      filename: filename,
+      data_string: () => jsPsych.data.get().json()
+    };
+
+    var end_trial = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<p>That is it! Thank you for completing the experiment!</p>Your submission will be reviewed by the researcher soon, then you will get paid!</p>
+    <p><a href="https://app.prolific.co/submissions/complete?cc=CNN6QTXJ">Click here to return to Prolific and complete the study</a>.</p>`,
+      choices: "NO_KEYS"
+    }
+
+
+    var feedback = {
+      type: jsPsychSurveyText,
+      questions: [
+        { prompt: 'Let us know if you experienced any difficulties, or would like to provide feedback! </p>', columns: 50, required: false },
+      ],
+      data: {
+        task: 'feedback'
+      }
+    }
+
+    var fullscreen_trial_exit = {
+      type: jsPsychFullscreen,
+      fullscreen_mode: false
+    }
+
+    jsPsych.run([
+      fullscreen_trial,
+      welcome_trial,
+      warning,
+      survey,
+      instruction1,
+      part1,
+      instructions,
+      image_naming_task,
+      part_2,
+      example_instruction,
+      example,
+      part_2_start,
+      fixation,
+      translating_task,
+      feedback,
+      save_data,
+      end_trial,
+      fullscreen_trial_exit
+    ])
+  }
+
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  //VERSION B, answer in Chinese -------------------------------------------------------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  function chineseVersion() {
+
+    var jsPsych = initJsPsych();
+
+    var shuffledStimuli = jsPsych.randomization.shuffle(test_stimuli);
+    var pic_to_chin_condition = shuffledStimuli.splice(0, 30);
+    var trans_to_chin_condition = shuffledStimuli.splice(0, 30);
+
+    var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+    const filename = `${subject_id}.csv`;
+    var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+    var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+    var condition_name = 'chineseVersion'
+
+    jsPsych.data.addProperties({
+      condition: condition_name,
+      subject_id: subject_id,
+      study_id: study_id,
+      session_id: session_id
+    });
+
+    var fullscreen_trial = {
+      type: jsPsychFullscreen,
+      fullscreen_mode: true
+    }
+
+    var preload = {
+      type: jsPsychPreload,
+      auto_preload: true
+    }
+
+    var welcome_trial = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `<p style="text-align center;">Thank you for agreeing to participate in this research experiment, conducted by a researcher at Vassar College! </p></p>This study takes about <b>20 minutes</b> and the pay will be <b>£3</b> or <b>$4</b> once approved.</p></p>Your only identity will be your Prolific ID.</p></p>To continue, you will need to be able to <b>read and type</b> in <b>English</b> and <b>Simplified Chinese (中文).</b></p> You will also need to be ready with Chinese installed on your keyboard.</p> You may press “ESC” on your keyboard to exit the full screen and close the study at any time. </p>`,
+          options: ['I agree to the terms of this study and wish to proceed.'],
+          required: true
+        }
+      ]
+    };
+
+    var warning = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `<p style="text-align center;">Again, you will <b>NEED</b> to know Simplified Chinese (中文).</p> You answers will be thoroughly reviewed. </p>If there are too many no or blank answers, or the time falls shorter than 10 minutes, the response WILL be rejected.</p> You may press “ESC” on your keyboard to exit the full screen and close the study at any time. </p>`,
+          options: ['I agree to the terms of this study and wish to proceed.'],
+          required: true
+        }
+      ]
+    };
+
+    var survey = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: "<b>Please answer the following questions before we start.</b></p> </p>What is your first language?",
+          name: 'firstLanguage',
+          options: ['Chinese (Mandarin)', 'Chinese (Cantonese)', 'Chinese (other dialects)', 'English', 'Other', 'Multiple languages as first language'],
+          data: {
+            task: 'first language'
+          },
+          required: true
+        },
+        {
+          prompt: "What language do you use most frequently?",
+          name: 'mainLanguage',
+          options: ['Chinese (Mandarin)', 'Chinese (Cantonese)', 'Chinese (other dialects)', 'English', 'Other', 'I use two or more languages equally frequently'],
+          data: {
+            task: 'main language'
+          },
+          required: true
+        }
+      ],
+    };
+
+    var instruction1 = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `Thank you! Let's get started! </p></p>We ask that you follow these instructions carefully. It is important that you <b>do not </p>communicate with others</b> or consult the internet for answers during the experiment.</p> Please <b>do not use the back button</b> on your browser as it will lose all progress. </p></p>It is <b>OK</b> to make mistakes. <b>Take your time</b> and try to answer to the best of your ability. </p></p> You will have an opportunity to provide feedback at the end. </p>Any questions? Contact the researcher through the Prolific messaging system.</p>`,
+          options: ['I have read the instructions.'],
+          required: true
+        }
+      ]
+    };
+
+    var part1 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `Part I, Name the Pictures in Chinese </p>`,
+      choices: ['Continue']
+    };
+
+    var instruction2 = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `<b>Tip of the Tongue (ToT)</b> phenomenon happens when you are confident that you know the target word, </p>yet you cannot recall this word. You might experience this effect in this study. </p> </p><b>Instructions:</b> </p>You will see a series of images. If you know the name of what is shown in Chinese, </p>select the “yes” choice and type the answer in Chinese. </p></p>No need to stress over the correct characters, but try to be as accurate as you can. </p></p>Here is an example.</p>`,
+          options: ['I have read the instructions and am ready to see an example.'],
+          required: true
+        }
+      ]
+    };
+    var appleExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/apple.jpg"></img>',
+      prompt: "</p>Can you name this in Chinese?<p style=color:grey> Press <b>'Yes'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in Chinese']
+    }
+
+    var appleExample2 = {
+      type: jsPsychSurveyText,
+      preamble: '<img src="example/apple.jpg"></img>',
+      questions: [
+        { prompt: 'Type the name in Chinese.</p><p style=color:grey>Please use the specific name. Enter characters instead of just pinyin. </p><p style=color:grey>For example, do not answer with the word “水果”. Instead, answer with “苹果”.<p>', columns: 30, required: true },
+      ]
+    }
+
+    var instruction3 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `If you know the name in Chinese but cannot recall right now, </p>select the <b>'I'm having ToT in Chinese'</b> button to proceed. Here is an example.</p>`,
+      choices: ['Continue']
+    };
+
+
+    var kiwiExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/kiwi.jpg"></img>',
+      prompt: "</p>Can you name this in Chinese?</p><p style=color:grey>Press <b>'I'm having ToT in Chinese'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in Chinese']
+    }
+
+    var kiwiExample2 = {
+      type: jsPsychHtmlButtonResponse,
+      prompt: "</p>Is this the word you were thinking of? <p style=color:grey>Answer with either choice.<p>",
+      stimulus: `<p style="font-size:150px;">奇异果</p>`,
+      choices: ['Yes', 'No']
+    }
+
+    var instruction4 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `If you do not know the name in Chinese, but do in English, </p>select the <b>'No'</b> choice to proceed. Here is an example.</p>`,
+      choices: ['Continue']
+    };
+
+    var orangeExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/orange.jpg"></img>',
+      prompt: "</p>Can you name this in Chinese?<p style=color:grey>Press <b>'No'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in Chinese']
+    }
+
+    var orangeExample2 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/orange.jpg"></img>',
+      prompt: "<p style=color:grey>Then the question continues.<p></p>Now, can you name this in <b>English</b>? </p><p style=color:grey>Press <b>'Yes'</b> for this trial.<p>",
+      choices: ['Yes', 'No', 'I`m having ToT in English']
+    }
+
+    var orangeExample3 = {
+      type: jsPsychSurveyText,
+      preamble: '<img src="example/orange.jpg"></img>',
+      questions: [
+        { prompt: 'Type the name in <b>English</b>.</p><p style=color:grey> Switch the language on your keyboard and type "orange".', columns: 30, required: true },
+      ]
+    }
+
+    var instruction5 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `If you do not know the name in Chinese, and are having a ToT in English, </p>select the <b>'No'</b> choice to proceed. Here is an example.</p>`,
+      choices: ['Continue']
+    };
+
+    var stawberryExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/strawberry.jpg"></img>',
+      prompt: "</p>Can you name this in Chinese?</p><p style=color:grey>Press <b>'No'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in Chinese']
+    }
+
+    var stawberryExample2 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/strawberry.jpg"></img>',
+      prompt: "</p>Now, can you name this in <b>English</b>? <p style=color:grey>Press <b>'I`m having ToT in English'</b> for this trial.<p>",
+      choices: ['Yes', 'No', 'I`m having ToT in English']
+    }
+
+    var stawberryExample3 = {
+      type: jsPsychHtmlButtonResponse,
+      prompt: "</p>Is this the word you were thinking of? </p><p style=color:grey>Answer with either choice.<p>",
+      stimulus: `<p style="font-size:150px;">strawberry</p>`,
+      choices: ['Yes', 'No']
+    }
+
+    var instruction6 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `If you do not know the name at all, </p>select the <b>'No'</b> choice to proceed. Here is an example.</p>`,
+      choices: ['Continue']
+    };
+
+    var lemonExample = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/lemon.jpg"></img>',
+      prompt: "</p>Can you name this in Chinese?</p><p style=color:grey>Press <b>'No'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in Chinese']
+    }
+
+    var lemonExample2 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<img src="example/lemon.jpg"></img>',
+      prompt: "</p>Now, can you name this in <b>English</b>?</p><p style=color:grey>Press <b>'No'</b> for this trial.</p>",
+      choices: ['Yes', 'No', 'I`m having ToT in English']
+    }
+
+    var ready = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `Are you ready to start? </p>`,
+      choices: ['Yes!', 'I would like to walkthrough the tutorial again.'],
+      data: {
+        task: 'ready'
+      }
+    }
+    var fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<span style="font-size:40px;">+</span>',
+      choices: "NO_KEYS",
+      trial_duration: 500
+    }
+
+    var instructions = {
+      timeline: [
+        instruction2,
+        appleExample,
+        appleExample2,
+        instruction3,
+        kiwiExample,
+        kiwiExample2,
+        instruction4,
+        orangeExample,
+        orangeExample2,
+        orangeExample3,
+        instruction5,
+        stawberryExample,
+        stawberryExample2,
+        stawberryExample3,
+        instruction6,
+        lemonExample,
+        lemonExample2,
+        ready,
+      ],
+      loop_function: function (instructions) {
+        if (jsPsych.data.get().last(1).values()[0].response == 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+
+    //PART 1, picture naming ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    var imageNaming = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: () => {
+        return `<img src="${jsPsych.timelineVariable('picture')}"></img>'</p>Can you name this in Chinese?</p>'`
+      },
+      choices: ['Yes', 'No', 'I`m having TOT in Chinese'],
+      data: {
+        task: 'pic-to-chin',
+        pictureStimulus: jsPsych.timelineVariable('picture')
+      }
+    }
+
+    var answer = {
+      timeline: [
+        {
+          type: jsPsychSurveyText,
+          preamble: () => {
+            return `<img src="${jsPsych.timelineVariable('picture')}"></img>`
+          },
+          questions: [
+            { prompt: 'Type the name in Chinese.', columns: 30, required: true },
+          ],
+          data: {
+            task: 'pic-to-eng response in Chinese',
+            correctEnglishResponse: jsPsych.timelineVariable('chinese')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'pic-to-chin' }).last(1).values()[0].response == 0
+      }
+    }
+
+    var no_choice = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: () => {
+            return `<img src="${jsPsych.timelineVariable('picture')}"></img>'</p>Now, can you name this in <b>English</b>?</p>'`
+          },
+          choices: ['Yes', 'No', 'I`m having ToT in English'],
+          data: {
+            task: 'no_choice'
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'pic-to-chin' }).last(1).values()[0].response == 1
+      }
+    }
+
+    var no_English_TOT = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          prompt: "</p>Is this the word you were thinking of?",
+          stimulus: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('english')}</p>`
+          },
+          choices: ['Yes', 'No'],
+          data: {
+            task: 'pic-to-chin TOT in English'
+          }
+        },
+      ],
+      conditional_function: () => {
+        var no_choice_validity =
+          jsPsych.data.get().last(1).values()[0]
+        if (no_choice_validity.task != 'no_choice') {
+          return false
+        }
+        return no_choice_validity.response == 2
+      }
+    }
+
+    var no_English_response = {
+      timeline: [
+        {
+          type: jsPsychSurveyText,
+          preamble: () => {
+            return `<img src="${jsPsych.timelineVariable('picture')}"></img>`
+          },
+          questions: [
+            { prompt: 'Type the name in <b>English</b>.', columns: 30, required: true },
+          ],
+          data: {
+            task: 'pic-to-chin response in English',
+            chineseResponse: jsPsych.timelineVariable('english')
+          }
+        }
+      ],
+      conditional_function: () => {
+        var no_choice_validity =
+          jsPsych.data.get().last(1).values()[0]
+        if (no_choice_validity.task != 'no_choice') {
+          return false
+        }
+        return no_choice_validity.response == 0
+      }
+    }
+
+    var TOT = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          prompt: "</p>Is this the word you were thinking of?",
+          stimulus: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('chinese')}</p>`
+          },
+          choices: ['Yes', 'No'],
+          data: {
+            task: 'pic-to-chin TOT in Chinese'
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'pic-to-chin' }).last(1).values()[0].response == 2
+      }
+    }
+
+    var image_naming_task = {
+      timeline: [
+        imageNaming,
+        answer,
+        no_choice,
+        no_English_TOT,
+        no_English_response,
+        TOT],
+      timeline_variables: pic_to_chin_condition,
+      randomize_order: true
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    var part_2 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `Part II, Translating English words to Chinese </p>`,
+      choices: ['Continue']
+    };
+
+    var example_instruction = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: `You are doing great! The second part is more straightforward. </p>It is similar to the last part. But instead of pictures, you will see English words. </p> You will be typing <b>exclusively</b> in <b>Chinese</b>. Here are a couple of examples.`,
+          options: ['I have read the instructions.'],
+          required: true
+        }
+      ]
+    };
+
+    var exampleStimuli = jsPsych.randomization.shuffle(ex_stimuli);
+    var example_condition = exampleStimuli.splice(0, 5);
+
+    var translating = {
+      type: jsPsychHtmlButtonResponse,
+
+      stimulus: () => {
+        return `<p style="font-size:150px;">${jsPsych.timelineVariable('english')}</p><p>Do you know this word in Chinese?</p>`
+      },
+      choices: ['Yes', 'No', 'I`m having TOT in Chinese'],
+      data: {
+        task: 'trans-to-chin',
+        chineseStimuli: jsPsych.timelineVariable('chinese')
+      }
+    }
+
+    var translatingAnswer = {
+      timeline: [
+        {
+          type: jsPsychSurveyText,
+          preamble: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('english')}</p>`
+          },
+          questions: [
+            { prompt: 'What is this word in Chinese?', columns: 30, required: true },
+          ],
+          data: {
+            task: 'eng-to-chin, response',
+            chineseResponse: jsPsych.timelineVariable('chinese')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'trans-to-chin' }).last(1).values()[0].response == 0
+      }
+    }
+
+    var fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<span style="font-size:40px;">+</span>',
+      choices: "NO_KEYS",
+      trial_duration: 200
+    }
+
+    var timeCheck = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: () => {
+            return `<p>You went really fast there! Take your time to think :)</p>`
+          },
+          choices: ['Continue']
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'trans-to-chin' }).last(1).values()[0].rt < 850
+      }
+    }
+
+    var translatingTOT = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          prompt: "</p>Is this the word you were thinking of?",
+          stimulus: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('chinese')}</p>`
+          },
+          choices: ['Yes', 'No'],
+          data: {
+            task: 'eng-to-chin, TOT',
+            chineseTOTAnswer: jsPsych.timelineVariable('chinese')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'trans-to-chin' }).last(1).values()[0].response == 2
+      }
+    }
+
+    var part_2_start = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `Great! This is the last section! Answer away! </p>`,
+      choices: ['Continue']
+    };
+
+    var example = {
+      timeline: [translating, translatingAnswer, timeCheck, translatingTOT, fixation],
+      timeline_variables: example_condition,
+      randomize_order: true
+    }
+
+    //PART 2, translating ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    var translating = {
+      type: jsPsychHtmlButtonResponse,
+
+      stimulus: () => {
+        return `<p style="font-size:150px;">${jsPsych.timelineVariable('english')}</p>
+<p>Do you know this word in Chinese?</p>`
+      },
+      choices: ['Yes', 'No', 'I`m having TOT in Chinese'],
+      data: {
+        task: 'trans-to-chin',
+        chineseStimuli: jsPsych.timelineVariable('chinese')
+      }
+    }
+
+    var translatingAnswer = {
+      timeline: [
+        {
+          type: jsPsychSurveyText,
+          preamble: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('english')}</p>`
+          },
+          questions: [
+            { prompt: 'What is this word in Chinese?', columns: 30, required: true },
+          ],
+          data: {
+            task: 'eng-to-chin, response',
+            chineseResponse: jsPsych.timelineVariable('chinese')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'trans-to-chin' }).last(1).values()[0].response == 0
+      }
+    }
+
+    var fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<span style="font-size:40px;">+</span>',
+      choices: "NO_KEYS",
+      trial_duration: 200
+    }
+
+    var timeCheck = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          stimulus: () => {
+            return `<p>You went really fast there! Take your time to think :)</p>`
+          },
+          choices: ['Continue']
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'trans-to-chin' }).last(1).values()[0].rt < 850
+      }
+    }
+
+    var translatingTOT = {
+      timeline: [
+        {
+          type: jsPsychHtmlButtonResponse,
+          prompt: "</p>Is this the word you were thinking of?",
+          stimulus: () => {
+            return `<p style="font-size:150px;">${jsPsych.timelineVariable('chinese')}</p>`
+          },
+          choices: ['Yes', 'No'],
+          data: {
+            task: 'eng-to-chin, TOT',
+            chineseTOTAnswer: jsPsych.timelineVariable('chinese')
+          }
+        }
+      ],
+      conditional_function: () => {
+        return jsPsych.data.get().filter({ task: 'trans-to-chin' }).last(1).values()[0].response == 2
+      }
+    }
+
+    var translating_task = {
+      timeline: [translating,
+        translatingAnswer,
+        timeCheck,
+        translatingTOT,
+        fixation],
+      timeline_variables: trans_to_chin_condition,
+      randomize_order: true
+    }
+
+    const save_data = {
+      type: jsPsychPipe,
+      action: "save",
+      experiment_id: "Oy4rPf7W5AiF",
+      filename: filename,
+      data_string: () => jsPsych.data.get().json()
+    };
+
+    var end_trial = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<p>That is it! Thank you for completing the experiment!</p>Your submission will be reviewed by the researcher soon, then you will get paid!</p>
+    <p><a href="https://app.prolific.co/submissions/complete?cc=CNN6QTXJ">Click here to return to Prolific and complete the study</a>.</p>`,
+      choices: "NO_KEYS"
+    }
+
+    var feedback = {
+      type: jsPsychSurveyText,
+      questions: [
+        { prompt: 'Let us know if you experienced any difficulties, or would like to provide feedback! </p>', columns: 50, required: false },
+      ],
+      data: {
+        task: 'feedback'
+      }
+    }
+
+
+    var fullscreen_trial_exit = {
+      type: jsPsychFullscreen,
+      fullscreen_mode: false
+    }
+
+    jsPsych.run([
+      fullscreen_trial,
+      welcome_trial,
+      warning,
+      survey,
+      instruction1,
+      part1,
+      instructions,
+      image_naming_task,
+      part_2,
+      example_instruction,
+      example,
+      part_2_start,
+      fixation,
+      translating_task,
+      feedback,
+      save_data,
+      end_trial,
+      fullscreen_trial_exit
+    ])
+  }
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+</script>
+
+</html>
