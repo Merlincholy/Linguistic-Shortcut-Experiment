@@ -473,11 +473,22 @@
         rows: 3,
         // filling text box is required
         required: false,
+ 
+      },
+    ],
+  };
+
+  var effort = {
+    type: jsPsychSurveyText,
+    questions: [
+      {
+        
         prompt:
         "We will pay you anyway, so please answer honestly: were you able to follow the instructions for each task to the best of your ability?",
         name: "effort",
         rows:1,
-      },
+        required: true,
+  },
     ],
   };
 
@@ -519,6 +530,7 @@ var exitMessage = {
     initMic,
     test,
     feedback,
+    effort,
     save_data,
     exitMessage
 
