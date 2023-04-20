@@ -1,173 +1,198 @@
 ﻿<!DOCTYPE html>
 <html>
-  <head>
-    <title>My experiment</title>
-    <script src="https://unpkg.com/jspsych@7.3.1"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-video-button-response@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-audio-keyboard-response@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-preload@1.0.0"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-initialize-microphone@1.0.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-html-audio-response@1.0.2"></script>
-    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
-    <link
-      href="https://unpkg.com/jspsych@7.3.1/css/jspsych.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-  </head>
 
-  <body></body>
-  <script>
-    /* initialize jsPsych */
-    var jsPsych = initJsPsych();
+<head>
+  <title>Linguistic Shortcut experiment</title>
+  <script src="https://unpkg.com/jspsych@7.3.1"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-video-button-response@1.1.2"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.2"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-audio-keyboard-response@1.1.2"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-preload@1.0.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-initialize-microphone@1.0.2"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-audio-response@1.0.2"></script>
+  <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.1"></script>
 
-    /* generate a unique file for each subject */
-    //data pipe experiment ID
-    const expID = "9P6s5mGLv7V3";
-    const subject_id = jsPsych.randomization.randomID(10);
-    const filename = `${subject_id}.csv`;
 
-    /* Array of 98 words */
-    const words = [
-      "abuse",
-      "agenda",
-      "annoy",
-      "attack",
-      "bean",
-      "blame",
-      "bread",
-      "candidate",
-      "cheese",
-      "cloud",
-      "concentrate",
-      "cope",
-      "cupboard",
-      "delay",
-      "diet",
-      "domestic",
-      "effort",
-      "establish",
-      "extension",
-      "fence",
-      "fraction",
-      "gold",
-      "heaven",
-      "ideal",
-      "joint",
-      "landlord",
-      "loss",
-      "mathematics",
-      "nail",
-      "nurse",
-      "owe",
-      "permit",
-      "plug",
-      "prevent",
-      "pudding",
-      "reflect",
-      "repair",
-      "rock",
-      "sand",
-      "session",
-      "sin",
-      "source",
-      "store",
-      "swear",
-      "thick",
-      "tour",
-      "variety",
-      "weak",
-      "abbey",
-      "alley",
-      "astonish",
-      "basket",
-      "bond",
-      "bucket",
-      "canal",
-      "certificate",
-      "click",
-      "concert",
-      "corridor",
-      "curious",
-      "devote",
-      "dominate",
-      "echo",
-      "expose",
-      "fined",
-      "foster",
-      "gentle",
-      "greed",
-      "hay",
-      "hood",
-      "indulge",
-      "irony",
-      "ladder",
-      "liquid",
-      "manual",
-      "miracle",
-      "multiple",
-      "nuclear",
-      "overtake",
-      "peak",
-      "poison",
-      "pride",
-      "rack",
-      "rescue",
-      "routine",
-      "script",
-      "shove",
-      "snap",
-      "spite",
-      "stiff",
-      "suicide",
-      "symbol",
-      "terrace",
-      "torch",
-      "tumble",
-      "vandal",
-      "wander",
-      "wolf",
-    ];
+  <link href="https://unpkg.com/jspsych@7.3.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+</head>
 
-    /* Practice words */
-    const pracWords = [
-      "explode",
-      "steal",
-      "treat",
-      "capture",
-      "delicious",
-      "lightning"
-    ];
+<body></body>
+<script>
+  /* initialize jsPsych */
+  var jsPsych = initJsPsych({
+    show_progress_bar: true,
+    auto_update_progress_bar: false,
+  });
 
-    /* Welcome message */
-    var welcome = {
-      type: jsPsychHtmlKeyboardResponse,
-      stimulus: `
-      Our experiment is a timed word association task.
-      We are going to initialize your microphone to record you speaking for one of our tasks.
-      Click any button to continue.
-      `,
-    };
+  /* generate a unique file for each subject */
+  //data pipe experiment ID
+  const expID = "9P6s5mGLv7V3";
 
-    /* progress bar */
-    var jsPsych = initJsPsych({
-      show_progress_bar: true,
-      auto_update_progress_bar: false,
-    });
 
-    // initialize mic 
+  // capture info from Prolific
+  var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+  var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+  var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+
+  jsPsych.data.addProperties({
+    subject_id: subject_id,
+    study_id: study_id,
+    session_id: session_id
+  });
+
+
+  /* Array of 98 words */
+  const OGwords = [
+    "abuse",
+    "agenda",
+    "annoy",
+    "attack",
+    "bean",
+    "blame",
+    "bread",
+    "candidate",
+    "cheese",
+    "cloud",
+    "concentrate",
+    "cope",
+    "cupboard",
+    "delay",
+    "diet",
+    "domestic",
+    "effort",
+    "establish",
+    "extension",
+    "fence",
+    "fraction",
+    "gold",
+    "heaven",
+    "ideal",
+    "joint",
+    "landlord",
+    "loss",
+    "mathematics",
+    "nail",
+    "nurse",
+    "owe",
+    "permit",
+    "plug",
+    "prevent",
+    "pudding",
+    "reflect",
+    "repair",
+    "rock",
+    "sand",
+    "session",
+    "sin",
+    "source",
+    "store",
+    "swear",
+    "thick",
+    "tour",
+    "variety",
+    "weak",
+    "abbey",
+    "alley",
+    "astonish",
+    "basket",
+    "bond",
+    "bucket",
+    "canal",
+    "certificate",
+    "click",
+    "concert",
+    "corridor",
+    "curious",
+    "devote",
+    "dominate",
+    "echo",
+    "expose",
+    "fined",
+    "foster",
+    "gentle",
+    "greed",
+    "hay",
+    "hood",
+    "indulge",
+    "irony",
+    "ladder",
+    "liquid",
+    "manual",
+    "miracle",
+    "multiple",
+    "nuclear",
+    "overtake",
+    "peak",
+    "poison",
+    "pride",
+    "rack",
+    "rescue",
+    "routine",
+    "script",
+    "shove",
+    "snap",
+    "spite",
+    "stiff",
+    "suicide",
+    "symbol",
+    "terrace",
+    "torch",
+    "tumble",
+    "vandal",
+    "wander",
+    "wolf",
+  ];
+
+  const words = jsPsych.randomization.repeat(OGwords, 1);
+
+  /* Practice words */
+  const OGpracWords = [
+    "explode",
+    "steal",
+    "treat",
+    "capture",
+    "delicious",
+    "lightning"
+  ];
+
+  const pracWords = jsPsych.randomization.repeat(OGpracWords, 1);
+
+  /* Welcome message */
+  var welcome = {
+    type: jsPsychInstructions,
+    pages: [
+      ' Our experiment is a timed word association task.',
+      `Please switch this experiment browser to fullscreen mode. 
+      The study will need to be completed in a <strong>quiet</strong> environment 
+      that is free from distractions. A beeping noise will be played throughout this
+       experiment, so please turn your sound to a comfortable noise level.`,
+      `We are going to initialize your microphone to record you speaking for our tasks.`
+    ],
+    show_clickable_nav: true,
+    on_start: function() {
+        // set progress bar to 0 at the start of experiment
+        jsPsych.setProgressBar(0);
+    }
+  };
+
+
+  // initialize mic 
   var initMic = {
     type: jsPsychInitializeMicrophone
   };
 
+ /* Number of trials */
+ var n_trials = 3;
+ var real_exp_trials = 49;
 
   /* define short trial instructions */
-    var instructions_short_trial = {
-      type: jsPsychHtmlKeyboardResponse,
-      stimulus: `
+  var instructions_short_trial = {
+    type: jsPsychInstructions,
+    show_clickable_nav: true,
+    pages: [`
       <p>We will begin the short time trial. </p>
         <p>During this set of trials, you will be shown 
           a word on the screen. We ask you to think of a 
@@ -185,12 +210,20 @@
         
            <p>Press any key to begin the practice trials.</p>
       `
-    };
+    ],
+      on_start: function () {
+        // practice trial count
+        n_trials = 3;
+        // set progress bar to 0 at the start of experiment
+        jsPsych.setProgressBar(0);
+      }
+  };
 
-    /* define long trial instructions */
-    var instructions_long_trial = {
-      type: jsPsychHtmlKeyboardResponse,
-      stimulus: `
+  /* define long trial instructions */
+  var instructions_long_trial = {
+    type: jsPsychInstructions,
+    show_clickable_nav: true,
+    pages: [`
       <p>We will begin the long time trial. </p>
         <p>During this set of trials, you will be shown 
           a word on the screen. We ask you to think of a 
@@ -208,205 +241,279 @@
  </p>
         
            <p>Press any key to begin the practice trials.</p>
-      `
-    };
-
-    /* Practice trials over message */
-    var practice_over = {
-        type: jsPsychHtmlAudioResponse,
-        stimulus: 'Your practice trials are complete. When you are ready, click any key to begin the actual trial.'
-        ,
+      `],
       on_start: function () {
+        // practice trial count
+         n_trials = 3;
+        // set progress bar to 0 at the start of experiment
+        jsPsych.setProgressBar(0);
+      }
+  };
+
+  /* Practice trials over message */
+  var practice_over = {
+    type: jsPsychInstructions,
+    show_clickable_nav: true,
+    pages: [
+    `<p>Your practice trials are complete. </p>
+        You will see 49 words in this block. When you are ready,
+      click any key to begin the actual trial.`
+   ],
+    
+      on_start: function () {
+        n_trials = real_exp_trials;
         // set progress bar to 0 at the start of experiment
         jsPsych.setProgressBar(0);
       },
     };
 
-    /* in between trials page */
-    var short_in_between = {
-      type: jsPsychHtmlKeyboardResponse,
-      stimulus:
-        "Press any key to see the next word (remember, you will have 2500 ms to respond)",
-    };
+  /* in between trials page */
+  var short_in_between = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus:
+      `Press any key to see the next word (remember, you will have 2500 ms to respond)
+      
+    <p> Speak BEFORE the beep and type your response AFTER the beep</p>`,
+  };
 
-    var long_in_between = {
-      type: jsPsychHtmlKeyboardResponse,
-      stimulus:
-        "Press any key to see the next word (remember, you will have 5000 ms to respond)",
-    };
+  var long_in_between = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus:
+      `Press any key to see the next word (remember, you will have 5000 ms to respond)
+
+      <p> Speak AFTER the beep and then type your response. </p>`
+      ,
+  };
 
 
-    // beep sound 
-    var beep = {
+  // beep sound 
+  var beep = {
     type: jsPsychAudioKeyboardResponse,
     stimulus: 'beep-2.wav',
     choices: "NO_KEYS",
     trial_ends_after_audio: true
   };
 
-  // record audio response 
 
-  var record = {
+
+ 
+
+  /* stimWord */
+
+  var stimWord;
+
+  var trial_count = 0;
+
+  var curr_progress_bar_value;
+
+  // record audio response and do trial
+
+  var short_record_trial = {
     type: jsPsychHtmlAudioResponse,
-    stimulus: 'Say word',
-    on_finish: (data) => {
-      var audiobase64 = data.response;
+    trial_duration: 2500,
+    show_done_button: false,
+    stimulus: function () {
+      stimWord = words[0];
+      words.shift();
+      return stimWord;
+    },
 
-      //send to datapipe
-      jsPsychPipe.saveBase64Data(expID, `${subject_id}.csv`, data.response)
+    on_finish: function (data) {
 
-      // clear the data from participants' computer to save space
-      data.response = null;
+      trial_count = trial_count + 1;
+      const filename = `${subject_id}_${trial_count}_audio.webm`;
+      jsPsychPipe.saveBase64Data(expID, filename, data.response);
+      // optionally, delete the base64 data to save space. store the filename instead.
+      data.response = filename;
+
+
+
+
     }
   };
 
 
-    /* Number of trials */
-    var n_trials = 2;
+  /*practice record short trial */
+  var short_practice_record_trial = {
+    type: jsPsychHtmlAudioResponse,
+    trial_duration: 2500,
+    recording_duration: 2500,
+    show_done_button: false,
+    stimulus: function () {
+      stimWord = pracWords[0];
+      pracWords.shift();
+      return stimWord;
+    },
 
-    /*short trial */
-    var short_trial = {
-      type: jsPsychHtmlKeyboardResponse,
-      choices: "NO_KEYS",
-      trial_duration: 1000,
-      stimulus: function () {
-        return jsPsych.randomization.sampleWithReplacement(words, 1);
-      },
-      on_finish: function () {
-        // at the end of each trial, update the progress bar
-        // based on the current value and the proportion to update for each trial
-        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
-        jsPsych.setProgressBar(curr_progress_bar_value + 1 / n_trials);
-      },
-    };
-
-     /*practice short trial */
-     var short_practice_trial = {
-      type: jsPsychHtmlKeyboardResponse,
-      choices: "NO_KEYS",
-      trial_duration: 1000,
-      stimulus: function () {
-        return jsPsych.randomization.sampleWithReplacement(pracWords, 1);
-      },
-      on_finish: function () {
-        // at the end of each trial, update the progress bar
-        // based on the current value and the proportion to update for each trial
-        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
-        jsPsych.setProgressBar(curr_progress_bar_value + 1 / 3);
-      }
-    };
-
-
-
-    /*long trial */
-    var long_trial = {
-      type: jsPsychHtmlKeyboardResponse,
-      choices: "NO_KEYS",
-      trial_duration: 1000,
-      stimulus: function () {
-        return jsPsych.randomization.sampleWithReplacement(words, 1);
-      },
-      on_finish: function () {
-        // at the end of each trial, update the progress bar
-        // based on the current value and the proportion to update for each trial
-        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
-        jsPsych.setProgressBar(curr_progress_bar_value + 1 / n_trials);
-      },
-    };
-
-    /* write response */
-    var write_word = {
-      type: jsPsychSurveyText,
-      questions: [
-        {
-          prompt:
-            "Write the word you said or type NA if you did not think of anything",
-          name: "Word_Response",
-          rows: 1,
-          // filling text box is required
-          required: true,
-          
-        },
-      ],
-      on_finish: (data) => {
-      var text = data.response;
-
-      //send to datapipe
-      jsPsychPipe.saveBase64Data(expID, `${subject_id}-text.webm`, data.response)
-
-      // clear the data from participants' computer to save space
-      data.response = null;
+    on_finish: function (data) {
+      data.trial_word = stimWord;
     }
-    };
+  };
 
 
-    /* define short trial timeline */
-    var short_test_procedure = {
-      timeline: [short_in_between, short_trial, write_word],
-      repetitions: n_trials,
-    };
 
-        /* short trial practice timeline */
-        var short_practice = {
-      timeline: [short_in_between, short_practice_trial, write_word],
-      repetitions: 3,
-    };
+  /*long trial */
+  var long_trial = {
+    type: jsPsychHtmlKeyboardResponse,
+    choices: "NO_KEYS",
+    trial_duration: 5000,
+    stimulus: function () {
+      stimWord = words[0];
+      words.shift();
+      return stimWord;
+    },
+    on_finish: function (data) {
+
+      data.trial_word = stimWord;
+    },
+  };
+
+  /*practice long trial */
+  var long_practice_trial = {
+    type: jsPsychHtmlKeyboardResponse,
+    choices: "NO_KEYS",
+    trial_duration: 5000,
+    stimulus: function () {
+      stimWord = pracWords[0];
+      pracWords.shift();
+      return stimWord;
+    },
+    on_finish: function (data) {
+
+      data.trial_word = stimWord;
+    },
+  };
+
+  /*record long trial */
+  var long_record = {
+    type: jsPsychHtmlKeyboardResponse,
+    choices: "NO_KEYS",
+    trial_duration: 2000,
+    stimulus: '<strong> Say</strong> the word you thought of',
+
+  };
+
+  /* write response */
+  var write_word = {
+    type: jsPsychSurveyText,
+    questions: [
+      {
+        prompt:
+       n_trials,
+          //"<strong> Write </strong> the word you said or type NA if you did not think of anything",
+        name: "Word_Response",
+        rows: 1,
+        // filling text box is required
+        required: true,
+
+      },
+    ],
+    on_finish: function (data) {
+ 
+          // at the end of each trial, update the progress bar
+      // based on the current value and the proportion to update for each trial
+      curr_progress_bar_value = jsPsych.getProgressBarCompleted();
+      jsPsych.setProgressBar(curr_progress_bar_value + (1 / n_trials));
     
-
-    /* define long trial timeline */
-    var long_test_procedure = {
-      timeline: [long_in_between, long_trial, write_word],
-      repetitions: n_trials,
-    };
-
-
-    /* Both conditions, randomized */
-  var conditions_array = [[instructions_short_trial, short_practice, practice_over, short_test_procedure], [instructions_long_trial, practice_over, long_test_procedure]];
-  var randomize_array = [0,1];
-  var cond_1_setting = jsPsych.randomization.sampleWithReplacement(randomize_array, 1);
-  var cond_2_setting = jsPsych.randomization.sampleWithReplacement(randomize_array, 1);
-  
-      // timeline of 2 conditions
-      var cond_1 = {
-      timeline: conditions_array[cond_1_setting]
+      data.trial_word = stimWord;
+    }
   };
 
-    var cond_2 = {
-      timeline: conditions_array[cond_2_setting]
-    };
-  
 
-    // save the data to data pipe 
+  /* define short trial timeline */
+  var short_test_procedure = {
+    timeline: [short_in_between, short_record_trial, beep, write_word],
+    repetitions: real_exp_trials,
+
+  };
+
+  /* short trial practice timeline */
+  var short_practice = {
+    timeline: [short_in_between, short_practice_record_trial, beep, write_word],
+    repetitions: n_trials,
+
+  };
+
+
+  /* define long trial timeline */
+  var long_test_procedure = {
+    timeline: [long_in_between, long_trial, beep, long_record, write_word],
+    repetitions: real_exp_trials,
+    
+  };
+  /* long trial practice timeline */
+  var long_practice = {
+    timeline: [long_in_between, long_practice_trial, beep, long_record, write_word],
+    repetitions: n_trials,
+
+  };
+
+
+  /* Both conditions, randomized */
+  var short_cond = {
+    timeline: [instructions_short_trial, short_practice, practice_over, short_test_procedure],
+  };
+
+  var long_cond = {
+    timeline: [instructions_long_trial, long_practice, practice_over, long_test_procedure],
+  };
+
+  short_long_cond = jsPsych.randomization.shuffle([short_cond, long_cond])
+
+  var test = {
+    timeline: short_long_cond,
+    randomize_order: true,
+  };
+
+
+
+
+  var feedback = {
+    type: jsPsychSurveyText,
+    questions: [
+      {
+        prompt:
+          "Did you experience any technical difficulties?",
+        name: "feedback",
+        rows: 3,
+        // filling text box is required
+        required: false,
+
+      },
+    ],
+  };
+
+
+  // save the data to data pipe 
   const save_data = {
     type: jsPsychPipe,
     action: "save",
     experiment_id: expID,
-    filename: `${subject_id}-word.csv`,
+    filename: `${subject_id}.csv`,
     data_string: () => jsPsych.data.get().csv()
   };
 
-   /* Exit message */
-    var exitMessage = {
-      type: jsPsychHtmlKeyboardResponse,
-      stimulus: `
-      You've reached the end. You may now close this tab.
-      `,
-    };
 
-    /* start the experiment */
-    jsPsych.run([
-      welcome,
-      //initMic,
-      //beep,
-      //record,
-      short_test_procedure,
-      //short_practice,
-      //cond_1,
-      //cond_2,
-      save_data,
-      exitMessage
+  /* Exit message */
+  var exitMessage = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+      You've reached the end. You may now return to Prolific.
+      `,
+  };
+
+
+  /* start the experiment */
+  jsPsych.run([
+    welcome,
+    initMic,
+    test,
+    feedback,
+    save_data,
+    exitMessage
 
 
   ]);
-  </script>
+</script>
+
 </html>
