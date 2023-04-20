@@ -186,7 +186,7 @@
 
   /* Number of trials */
   var n_trials = 3;
-  var real_exp_trials = 48;
+  var real_exp_trials = 24;
 
   /* define short trial instructions */
   var instructions_short_trial = {
@@ -252,7 +252,7 @@
     show_clickable_nav: true,
     pages: [
       `<p>Your practice trials are complete. </p>
-        You will see 48 words in this block. When you are ready,
+        You will see 24 words in this block. When you are ready,
       click next to begin the actual trial.`
     ],
 
@@ -418,7 +418,7 @@
   /* define short trial timeline */
   var short_test_procedure = {
     timeline: [short_in_between, short_record_trial, beep, write_word],
-    repetitions: 48,
+    repetitions: 24,
 
   };
 
@@ -433,7 +433,7 @@
   /* define long trial timeline */
   var long_test_procedure = {
     timeline: [long_in_between, long_trial, beep, long_record, write_word],
-    repetitions: 48,
+    repetitions: 24,
 
   };
   /* long trial practice timeline */
@@ -473,7 +473,10 @@
         rows: 3,
         // filling text box is required
         required: false,
-
+        prompt:
+        "We will pay you anyway, so please answer honestly: were you able to follow the instructions for each task to the best of your ability?",
+        name: "effort",
+        rows:1,
       },
     ],
   };
@@ -496,20 +499,15 @@ var exitMessage = {
     type: jsPsychInstructions,
     show_clickable_nav: true,
     pages: [
-      `<p>Thank you for taking the time to participate in our study!
-         This study is investigating a phenomenon known as the linguistic shortcut
-          which involves the use of distributional, statistical patterns in language 
-          during rapid conceptual processing. When given more time, individuals are able 
-          to access the simulated system which offers deeper processing. We are curious if
-           individuals will automatically switch between the linguistic shortcut and 
-           the simulated system when they are given shorter and longer time constraints
-            but not explicitly told to produce different responses. In other words, do we
-             continue using the linguistic shortcut even without time constraints? 
-             We hypothesize that individuals will switch between the two systems given
-              the different time constraints.</p>`,
+      `<p>Thank you for taking the time to participate in our study! 
+        This study is investigating when individuals use language
+         associations or deeper processing systems when faced with different
+          time constraints. We hypothesize that language associations will
+           be used when given less time and deeper processing will occur in longer
+            time conditions.</p>`,
 
               `<p>You've finished the last task. Thanks for participating!</p>
-    <p><a href="https://app.prolific.co/submissions/complete?cc=XXXXXXX">Click here to return to Prolific and complete the study</a>.</p>`,
+    <p><a href="https://app.prolific.co/submissions/complete?cc=C5VLW082">Click here to return to Prolific and complete the study</a>.</p>`,
   
     ],
   };
