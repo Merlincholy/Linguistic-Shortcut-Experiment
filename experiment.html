@@ -163,7 +163,7 @@
     type: jsPsychInstructions,
     pages: [
       ' Our experiment is a timed word association task.',
-      `Please switch this experiment browser to fullscreen mode. 
+      `Please switch this experiment browser to fullscreen mode and avoid using Safari. 
       The study will need to be completed in a <strong>quiet</strong> environment 
       that is free from distractions. A beeping noise will be played throughout this
        experiment, so please turn your sound to a comfortable noise level.`,
@@ -199,14 +199,12 @@
           <p>Say the word that comes to mind out loud <strong>before</strong> the beep. 
           You will have 2500 ms (2.5 seconds) to respond. </p>
           
-          <p>There will be a clock in 
-          the top right corner of the screen that shows you 
-          how much time is left until the beep. After the beep,
+          <p>After the beep,
            we ask you to type the word you thought of in the space 
            provided.  </p>
            <p><strong>There will be three practice trials for you to get accustomed to the task.</strong>
         
-           <p>Press any key to begin the practice trials.</p>
+           <p>Press next to begin the practice trials.</p>
       `
     ],
     on_start: function () {
@@ -230,15 +228,13 @@
           <p>Say the word that comes to mind out loud <strong>after</strong> the beep. 
           You will have 5000 ms (5 seconds) to respond. </p>
           
-          <p>There will be a clock in 
-          the top right corner of the screen that shows you 
-          how much time is left until the beep. After the beep,
+          <p>After the beep,
            we ask you to type the word you thought of in the space 
            provided.  </p>
            <p><strong>There will be three practice trials for you to get accustomed to the task.</strong>
  </p>
         
-           <p>Press any key to begin the practice trials.</p>
+           <p>Press next to begin the practice trials.</p>
       `],
     on_start: function () {
       // practice trial count
@@ -420,7 +416,7 @@
   /* define short trial timeline */
   var short_test_procedure = {
     timeline: [short_in_between, short_record_trial, beep, write_word],
-    repetitions: 48,
+    repetitions: 5,
 
   };
 
@@ -435,7 +431,7 @@
   /* define long trial timeline */
   var long_test_procedure = {
     timeline: [long_in_between, long_trial, beep, long_record, write_word],
-    repetitions: 48,
+    repetitions: 5,
 
   };
   /* long trial practice timeline */
@@ -491,12 +487,29 @@
   };
 
 
+  ''
   /* Exit message */
-  var exitMessage = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: `
-      You've reached the end. You may now return to Prolific.
-      `,
+
+var exitMessage = {
+    type: jsPsychInstructions,
+    show_clickable_nav: true,
+    pages: [
+      `<p>Thank you for taking the time to participate in our study!
+         This study is investigating a phenomenon known as the linguistic shortcut
+          which involves the use of distributional, statistical patterns in language 
+          during rapid conceptual processing. When given more time, individuals are able 
+          to access the simulated system which offers deeper processing. We are curious if
+           individuals will automatically switch between the linguistic shortcut and 
+           the simulated system when they are given shorter and longer time constraints
+            but not explicitly told to produce different responses. In other words, do we
+             continue using the linguistic shortcut even without time constraints? 
+             We hypothesize that individuals will switch between the two systems given
+              the different time constraints.</p>`,
+
+              `<p>You've finished the last task. Thanks for participating!</p>
+    <p><a href="https://app.prolific.co/submissions/complete?cc=XXXXXXX">Click here to return to Prolific and complete the study</a>.</p>`,
+  
+    ],
   };
 
 
