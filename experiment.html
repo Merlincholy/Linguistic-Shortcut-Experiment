@@ -43,6 +43,8 @@
     session_id: session_id
   });
 
+  var subject_id_webm = jsPsych.randomization.randomID(10);
+
 
   /* Array of 98 words */
   const OGwords = [
@@ -315,7 +317,7 @@
     on_finish: function (data) {
 
       trial_count = trial_count + 1;
-      const filename = `${subject_id}_${trial_count}_audio.webm`;
+      const filename = `${subject_id_webm}_${trial_count}_audio.webm`;
       jsPsychPipe.saveBase64Data(expID, filename, data.response);
       // optionally, delete the base64 data to save space. store the filename instead.
       data.response = filename;
@@ -416,7 +418,7 @@
   /* define short trial timeline */
   var short_test_procedure = {
     timeline: [short_in_between, short_record_trial, beep, write_word],
-    repetitions: 5,
+    repetitions: 2,
 
   };
 
@@ -451,7 +453,7 @@
     timeline: [instructions_long_trial, long_practice, practice_over, long_test_procedure],
   };
 
-  short_long_cond = jsPsych.randomization.shuffle([short_cond, long_cond])
+  short_long_cond = jsPsych.randomization.shuffle([short_cond, long_cond]);
 
   var test = {
     timeline: short_long_cond,
@@ -482,7 +484,7 @@
     type: jsPsychPipe,
     action: "save",
     experiment_id: expID,
-    filename: `${subject_id}.csv`,
+    filename: `${subject_id_webm}.csv`,
     data_string: () => jsPsych.data.get().csv()
   };
 
@@ -517,7 +519,7 @@ var exitMessage = {
   jsPsych.run([
     welcome,
     initMic,
-    test,
+    short_test_procedure,//test,
     feedback,
     save_data,
     exitMessage
