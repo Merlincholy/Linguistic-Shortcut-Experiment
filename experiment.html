@@ -28,10 +28,10 @@
     //data pipe experiment ID
     const expID = "9P6s5mGLv7V3";
     const subject_id = jsPsych.randomization.randomID(10);
-    const filename = `${subject_id}.csv`;
+
 
     /* Array of 98 words */
-    const words = [
+    const OGwords = [
       "abuse",
       "agenda",
       "annoy",
@@ -132,8 +132,10 @@
       "wolf",
     ];
 
+    const words = jsPsych.randomization.repeat(OGwords, 1);
+
     /* Practice words */
-    const pracWords = [
+    const OGpracWords = [
       "explode",
       "steal",
       "treat",
@@ -141,6 +143,8 @@
       "delicious",
       "lightning"
     ];
+
+    const pracWords = jsPsych.randomization.repeat(OGpracWords, 1);
 
     /* Welcome message */
     var welcome = {
@@ -181,8 +185,7 @@
           how much time is left until the beep. After the beep,
            we ask you to type the word you thought of in the space 
            provided.  </p>
-           <p>There will be three practice trials for you to get accustomed to the task.
- </p>
+           <p><strong>There will be three practice trials for you to get accustomed to the task.</strong>
         
            <p>Press any key to begin the practice trials.</p>
       `
@@ -205,7 +208,7 @@
           how much time is left until the beep. After the beep,
            we ask you to type the word you thought of in the space 
            provided.  </p>
-           <p>There will be three practice trials for you to get accustomed to the task.
+           <p><strong>There will be three practice trials for you to get accustomed to the task.</strong>
  </p>
         
            <p>Press any key to begin the practice trials.</p>
@@ -214,19 +217,19 @@
 
     /* Practice trials over message */
     var practice_over = {
-        type: jsPsychHtmlAudioResponse,
-        stimulus: 'Your practice trials are complete. When you are ready, click any key to begin the actual trial.'
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: 'Your practice trials are complete. You will see 49 words in this block. When you are ready, click any key to begin the actual trial.'
         ,
-      on_start: function () {
+      on_start: function() {
         // set progress bar to 0 at the start of experiment
         jsPsych.setProgressBar(0);
-      },
+      }
     };
 
     /* in between trials page */
     var short_in_between = {
       type: jsPsychHtmlKeyboardResponse,
-      stimulus:
+      stimulus: 
         "Press any key to see the next word (remember, you will have 2500 ms to respond)",
     };
 
@@ -236,89 +239,132 @@
         "Press any key to see the next word (remember, you will have 5000 ms to respond)",
     };
 
-    /* Number of trials */
-    var n_trials = 2;
-
-    /*short trial */
-    var short_trial = {
-      type: jsPsychHtmlKeyboardResponse,
-      // they can't pick any keys
-      choices: "NO_KEYS",
-      trial_duration: 1000,
-      stimulus: function () {
-        return jsPsych.randomization.sampleWithReplacement(words, 1);
-      },
-      on_finish: function () {
-        // at the end of each trial, update the progress bar
-        // based on the current value and the proportion to update for each trial
-        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
-        jsPsych.setProgressBar(curr_progress_bar_value + 1 / n_trials);
-      },
-    };
-
-    /* short trial practice timeline */
-    var short_practice = {
-      timeline: [short_in_between, short_practice_trial, write_word],
-      repetitions: 3
-    };
-
-    /*practice short trial */
-    var short_practice_trial = {
-      type: jsPsychHtmlKeyboardResponse,
-      // they can't pick any keys
-      choices: "NO_KEYS",
-      trial_duration: 1000,
-      stimulus: function () {
-        return jsPsych.randomization.sampleWithReplacement(pracWords, 1);
-      },
-      on_finish: function () {
-        // at the end of each trial, update the progress bar
-        // based on the current value and the proportion to update for each trial
-        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
-        jsPsych.setProgressBar(curr_progress_bar_value + 1 / 3);
-      }
-    };
 
     // beep sound 
-  var beep = {
+    var beep = {
     type: jsPsychAudioKeyboardResponse,
     stimulus: 'beep-2.wav',
     choices: "NO_KEYS",
     trial_ends_after_audio: true
   };
 
-  // record audio response 
 
-  var record = {
+
+    /* Number of trials */
+    var n_trials = 49;
+
+    /* stimWord */
+
+    var stimWord; 
+
+    var trial_count = 0;
+
+  // record audio response and do trial
+
+  var short_record_trial = {
     type: jsPsychHtmlAudioResponse,
-    stimulus: 'Say word',
-    on_finish: (data) => {
-      var audiobase64 = data.response;
+    trial_duration: 2500,
+    show_done_button: false,
+      stimulus: function () {
+        var stimWord = words[0];
+        words.shift();
+        return stimWord;
+      },
+      
+    on_finish: function(data) {
+      trial_count = trial_count + 1;
+      const filename = `${subject_id}_${trial_count}_audio.webm`;
+      jsPsychPipe.saveBase64Data(expID,  filename, data.response);
+      // optionally, delete the base64 data to save space. store the filename instead.
+      data.response = filename;
+      // at the end of each trial, update the progress bar
+        // based on the current value and the proportion to update for each trial
+        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
+        jsPsych.setProgressBar(curr_progress_bar_value + 1 / n_trials);
+        data.trial_word = stimWord;
 
-      //send to datapipe
-      jsPsychPipe.saveBase64Data(expID, `${subject_id}.csv`, data.response)
 
-      // clear the data from participants' computer to save space
-      data.response = null;
     }
   };
+
+
+     /*practice record short trial */
+     var short_practice_record_trial = {
+    type: jsPsychHtmlAudioResponse,
+    trial_duration: 2500,
+    recording_duration: 2500,
+    show_done_button: false,
+      stimulus: function () {
+        var stimWord = pracWords[0];
+        pracWords.shift();
+        return stimWord;
+      },
+      
+    on_finish: function(data) {
+      
+      // at the end of each trial, update the progress bar
+        // based on the current value and the proportion to update for each trial
+        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
+        jsPsych.setProgressBar(curr_progress_bar_value + 1 / n_trials);
+        data.trial_word = stimWord;
+    }
+  };
+
 
 
     /*long trial */
     var long_trial = {
       type: jsPsychHtmlKeyboardResponse,
       choices: "NO_KEYS",
-      trial_duration: 1000,
+      trial_duration: 5000,
       stimulus: function () {
-        return jsPsych.randomization.sampleWithReplacement(words, 1);
+        var stimWord = words[0];
+        words.shift();
+        return stimWord;
       },
-      on_finish: function () {
+      on_finish: function (data) {
         // at the end of each trial, update the progress bar
         // based on the current value and the proportion to update for each trial
         var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
         jsPsych.setProgressBar(curr_progress_bar_value + 1 / n_trials);
+        data.trial_word = stimWord;
       },
     };
+
+       /*practice long trial */
+       var long_practice_trial = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+      stimulus: function () {
+        stimWord = pracWords[0];
+        pracWords.shift();
+        return stimWord;
+      },
+      on_finish: function (data) {
+        // at the end of each trial, update the progress bar
+        // based on the current value and the proportion to update for each trial
+        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
+        jsPsych.setProgressBar(curr_progress_bar_value + 1 / 3);
+        data.trial_word = stimWord;
+      },
+    };
+
+   /*record long trial */
+   var long_record = {
+    type: jsPsychHtmlAudioResponse,
+    recording_duration: 3000,
+    show_done_button: false,
+    stimulus: 'say the word you thought of',
+      
+    on_finish: function() {
+       // at the end of each trial, update the progress bar
+        // based on the current value and the proportion to update for each trial
+        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
+        jsPsych.setProgressBar(curr_progress_bar_value + 1 / n_trials);
+        
+    }
+  };
 
     /* write response */
     var write_word = {
@@ -334,29 +380,41 @@
           
         },
       ],
-      data: {
-        task: 'feedback'
+      on_finish: function(data) {
+        data.trial_word = stimWord
       }
     };
 
 
     /* define short trial timeline */
     var short_test_procedure = {
-      timeline: [short_in_between, short_trial, write_word],
+      timeline: [short_in_between, short_record_trial, beep, write_word],
       repetitions: n_trials,
     };
 
+        /* short trial practice timeline */
+        var short_practice = {
+      timeline: [short_in_between, short_practice_record_trial, beep, write_word],
+      repetitions: 3,
+    };
     
 
     /* define long trial timeline */
     var long_test_procedure = {
-      timeline: [long_in_between, long_trial, write_word],
+      timeline: [long_in_between, long_trial, beep, long_record, write_word],
       repetitions: n_trials,
     };
-
+      /* long trial practice timeline */
+      var long_practice = {
+      timeline: [long_in_between, long_practice_trial, beep, long_record, write_word],
+      repetitions: 3,
+    };
+    
 
     /* Both conditions, randomized */
-  var conditions_array = [[instructions_short_trial, short_practice, practice_over, short_test_procedure], [instructions_long_trial, practice_over, long_test_procedure]];
+  var conditions_array = [
+    [instructions_short_trial, short_practice, practice_over, short_test_procedure],
+     [instructions_long_trial, long_practice, practice_over, long_test_procedure]];
   var randomize_array = [0,1];
   var cond_1_setting = jsPsych.randomization.sampleWithReplacement(randomize_array, 1);
   var cond_2_setting = jsPsych.randomization.sampleWithReplacement(randomize_array, 1);
@@ -369,19 +427,32 @@
     var cond_2 = {
       timeline: conditions_array[cond_2_setting]
     };
+
+    var feedback = {
+      type: jsPsychSurveyText,
+      questions: [
+        {
+          prompt:
+            "Did you experience any technical difficulties?",
+          name: "Word_Response",
+          rows: 3,
+          // filling text box is required
+          required: false,
+          
+        },
+      ],
+    }
   
 
-    //temp
-    //timeline.push(long_test_procedure, short_test_procedure);
-
     // save the data to data pipe 
-  const save_data = {
-    type: jsPsychPipe,
-    action: "save",
-    experiment_id: expID,
-    filename: `${subject_id}.csv`,
-    data_string: () => jsPsych.data.get().csv()
-  };
+    const save_data = {
+  type: jsPsychPipe,
+  action: "save",
+  experiment_id: expID,
+  filename: `${subject_id}.csv`,
+  data_string: ()=>jsPsych.data.get().csv()
+};
+
 
    /* Exit message */
     var exitMessage = {
@@ -394,11 +465,10 @@
     /* start the experiment */
     jsPsych.run([
       welcome,
-      //initMic,
-      //beep,
-      //record,
+      initMic,
       cond_1,
       cond_2,
+      feedback,
       save_data,
       exitMessage
 
