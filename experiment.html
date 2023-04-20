@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Linguistic Shortcut experiment</title>
+  <title>Word Association with Time Limit</title>
   <script src="https://unpkg.com/jspsych@7.3.1"></script>
   <script src="https://unpkg.com/@jspsych/plugin-video-button-response@1.1.2"></script>
   <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.2"></script>
@@ -418,7 +418,7 @@
   /* define short trial timeline */
   var short_test_procedure = {
     timeline: [short_in_between, short_record_trial, beep, write_word],
-    repetitions: 5,
+    repetitions: 48,
 
   };
 
@@ -433,7 +433,7 @@
   /* define long trial timeline */
   var long_test_procedure = {
     timeline: [long_in_between, long_trial, beep, long_record, write_word],
-    repetitions: 5,
+    repetitions: 48,
 
   };
   /* long trial practice timeline */
