@@ -172,9 +172,9 @@
       `We are going to initialize your microphone to record you speaking for our tasks.`
     ],
     show_clickable_nav: true,
-    on_start: function() {
-        // set progress bar to 0 at the start of experiment
-        jsPsych.setProgressBar(0);
+    on_start: function () {
+      // set progress bar to 0 at the start of experiment
+      jsPsych.setProgressBar(0);
     }
   };
 
@@ -184,9 +184,9 @@
     type: jsPsychInitializeMicrophone
   };
 
- /* Number of trials */
- var n_trials = 3;
- var real_exp_trials = 49;
+  /* Number of trials */
+  var n_trials = 3;
+  var real_exp_trials = 49;
 
   /* define short trial instructions */
   var instructions_short_trial = {
@@ -211,12 +211,12 @@
            <p>Press any key to begin the practice trials.</p>
       `
     ],
-      on_start: function () {
-        // practice trial count
-        n_trials = 3;
-        // set progress bar to 0 at the start of experiment
-        jsPsych.setProgressBar(0);
-      }
+    on_start: function () {
+      // practice trial count
+      n_trials = 3;
+      // set progress bar to 0 at the start of experiment
+      jsPsych.setProgressBar(0);
+    }
   };
 
   /* define long trial instructions */
@@ -242,12 +242,12 @@
         
            <p>Press any key to begin the practice trials.</p>
       `],
-      on_start: function () {
-        // practice trial count
-         n_trials = 3;
-        // set progress bar to 0 at the start of experiment
-        jsPsych.setProgressBar(0);
-      }
+    on_start: function () {
+      // practice trial count
+      n_trials = 3;
+      // set progress bar to 0 at the start of experiment
+      jsPsych.setProgressBar(0);
+    }
   };
 
   /* Practice trials over message */
@@ -255,17 +255,17 @@
     type: jsPsychInstructions,
     show_clickable_nav: true,
     pages: [
-    `<p>Your practice trials are complete. </p>
+      `<p>Your practice trials are complete. </p>
         You will see 49 words in this block. When you are ready,
       click any key to begin the actual trial.`
-   ],
-    
-      on_start: function () {
-        n_trials = real_exp_trials;
-        // set progress bar to 0 at the start of experiment
-        jsPsych.setProgressBar(0);
-      },
-    };
+    ],
+
+    on_start: function () {
+      n_trials = real_exp_trials;
+      // set progress bar to 0 at the start of experiment
+      jsPsych.setProgressBar(0);
+    },
+  };
 
   /* in between trials page */
   var short_in_between = {
@@ -282,7 +282,7 @@
       `Press any key to see the next word (remember, you will have 5000 ms to respond)
 
       <p> Speak AFTER the beep and then type your response. </p>`
-      ,
+    ,
   };
 
 
@@ -296,7 +296,7 @@
 
 
 
- 
+
 
   /* stimWord */
 
@@ -399,8 +399,7 @@
     questions: [
       {
         prompt:
-       n_trials,
-          //"<strong> Write </strong> the word you said or type NA if you did not think of anything",
+          "<strong> Write </strong> the word you said or type NA if you did not think of anything",
         name: "Word_Response",
         rows: 1,
         // filling text box is required
@@ -409,12 +408,12 @@
       },
     ],
     on_finish: function (data) {
- 
-          // at the end of each trial, update the progress bar
+
+      // at the end of each trial, update the progress bar
       // based on the current value and the proportion to update for each trial
       curr_progress_bar_value = jsPsych.getProgressBarCompleted();
       jsPsych.setProgressBar(curr_progress_bar_value + (1 / n_trials));
-    
+
       data.trial_word = stimWord;
     }
   };
@@ -423,7 +422,7 @@
   /* define short trial timeline */
   var short_test_procedure = {
     timeline: [short_in_between, short_record_trial, beep, write_word],
-    repetitions: real_exp_trials,
+    repetitions: n_trials,
 
   };
 
@@ -438,8 +437,8 @@
   /* define long trial timeline */
   var long_test_procedure = {
     timeline: [long_in_between, long_trial, beep, long_record, write_word],
-    repetitions: real_exp_trials,
-    
+    repetitions: n_trials,
+
   };
   /* long trial practice timeline */
   var long_practice = {
