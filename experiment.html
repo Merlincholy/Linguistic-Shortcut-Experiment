@@ -418,7 +418,7 @@
   /* define short trial timeline */
   var short_test_procedure = {
     timeline: [short_in_between, short_record_trial, beep, write_word],
-    repetitions: 2,
+    repetitions: 5,
 
   };
 
@@ -519,7 +519,7 @@ var exitMessage = {
   jsPsych.run([
     welcome,
     initMic,
-    short_test_procedure,//test,
+    test,
     feedback,
     save_data,
     exitMessage
